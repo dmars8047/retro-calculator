@@ -3,6 +3,8 @@
 #include <SDL_image.h>
 #include <string>
 
+#include "texturestore.h"
+
 const int MAIN_WINDOW_WIDTH = 400;
 const int MAIN_WINDOW_HEIGHT = 600;
 const std::string APP_NAME = "Retro Calculator";
@@ -14,15 +16,18 @@ const int BACKGROUND_BLUE = 247;
 const int BACKGROUND_ALPHA = 255;
 
 // The window we'll be rendering to
-SDL_Window *mainWindow = NULL;
+SDL_Window *gMainWindow = NULL;
 
 // The window renderer
-SDL_Renderer *renderer = NULL;
+SDL_Renderer *gRenderer = NULL;
+
+// A store for textures
+TextureStore *gTextureStore = NULL;
 
 bool initSDL()
 {
     // Initialize SDL
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0)
+    if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
         printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
         return false;
@@ -38,25 +43,25 @@ bool initSDL()
         printf("Warning: Linear texture filtering not enabled!");
     }
 
-    mainWindow = SDL_CreateWindow(APP_NAME.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
+    gMainWindow = SDL_CreateWindow(APP_NAME.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
 
-    if (mainWindow == NULL)
+    if (gMainWindow == NULL)
     {
         printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
         return false;
     }
 
     // Create vsynced renderer for window
-    renderer = SDL_CreateRenderer(mainWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    gRenderer = SDL_CreateRenderer(gMainWindow, -1, SDL_RENDERER_ACCELERATED);
 
-    if (renderer == NULL)
+    if (gRenderer == NULL)
     {
         printf("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
         return false;
     }
 
     // Initialize renderer color
-    SDL_SetRenderDrawColor(renderer, BACKGROUND_RED, BACKGROUND_GREEN, BACKGROUND_BLUE, BACKGROUND_ALPHA);
+    SDL_SetRenderDrawColor(gRenderer, BACKGROUND_RED, BACKGROUND_GREEN, BACKGROUND_BLUE, BACKGROUND_ALPHA);
 
     // Initialize PNG loading
     if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG))
@@ -70,18 +75,23 @@ bool initSDL()
 
 bool loadMedia()
 {
+	gTextureStore = new TextureStore();
+
     return true;
 }
 
 bool close(int returnCode)
 {
     // Destroy window
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(mainWindow);
+    SDL_DestroyRenderer(gRenderer);
+    SDL_DestroyWindow(gMainWindow);
+    
+    // Clean up texture store
+    delete gTextureStore;
 
     // Quit SDL subsystems
-    IMG_Quit();
-    SDL_Quit();
+	IMG_Quit();
+	SDL_Quit();
 
     return returnCode;
 }
@@ -131,11 +141,11 @@ int main()
         }
 
         // Clear screen
-        SDL_SetRenderDrawColor(renderer, BACKGROUND_RED, BACKGROUND_GREEN, BACKGROUND_BLUE, BACKGROUND_ALPHA);
-        SDL_RenderClear(renderer);
+        SDL_SetRenderDrawColor(gRenderer, BACKGROUND_RED, BACKGROUND_GREEN, BACKGROUND_BLUE, BACKGROUND_ALPHA);
+        SDL_RenderClear(gRenderer);
 
         // Update screen
-        SDL_RenderPresent(renderer);
+        SDL_RenderPresent(gRenderer);
     }
 
     return close(0);
