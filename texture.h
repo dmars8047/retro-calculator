@@ -9,7 +9,7 @@ class Texture
 {
 public:
 	// Initializes variables
-	Texture();
+	Texture(std::string id);
 
 	// Deallocates memory
 	virtual ~Texture();
@@ -39,7 +39,10 @@ public:
 
 	// Gets image dimensions
 	int GetTextureWidth();
+
 	int GetTextureHeight();
+
+	std::string *GetId();
 
 private:
 	// The actual hardware texture
@@ -47,6 +50,7 @@ private:
 	// Image dimensions
 	int mWidth;
 	int mHeight;
+	std::string mId;
 	// Deallocates texture
 	void free();
 };

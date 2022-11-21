@@ -118,7 +118,7 @@ int main()
     // Event handler
     SDL_Event e;
 
-    ViewPort viewport = ViewPort(gAssetManager->GetTexture(TEXTURESTORE_VIEWPORT_TEXTURE));
+    ViewPort viewport = ViewPort(gAssetManager->GetTexture("viewport"));
 
     while (!quit)
     {

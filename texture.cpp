@@ -4,9 +4,10 @@
 
 #include "texture.h"
 
-Texture::Texture()
+Texture::Texture(std::string id)
 {
 	// Initialize
+	mId = id;
 	pTexture = NULL;
 	mWidth = 0;
 	mHeight = 0;
@@ -31,7 +32,7 @@ bool Texture::LoadFromFile(SDL_Renderer *renderer, std::string path)
 
 	if (loadedSurface == NULL)
 	{
-		std::cout << "Unable to load image " << path << "! SDL_image Error: " <<  IMG_GetError() << std::endl;
+		std::cout << "Unable to load image " << path << "! SDL_image Error: " << IMG_GetError() << std::endl;
 	}
 	else
 	{
@@ -101,7 +102,7 @@ void Texture::free()
 	// Free texture if it exists
 	if (pTexture != NULL)
 	{
-		std::cout << "Freeing texture..." << std::endl;
+		std::cout << "Freeing texture - " << mId << std::endl;
 
 		SDL_DestroyTexture(pTexture);
 		pTexture = NULL;
@@ -168,4 +169,9 @@ int Texture::GetTextureWidth()
 int Texture::GetTextureHeight()
 {
 	return mHeight;
+}
+
+std::string *Texture::GetId()
+{
+	return &mId;
 }

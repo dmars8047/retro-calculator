@@ -16,7 +16,6 @@ ViewPort::ViewPort(Texture *texture)
 
 ViewPort::~ViewPort()
 {
-    std::cout << "Freeing viewport..." << std::endl; 
     pTexture = NULL;
 }
 

@@ -1,6 +1,7 @@
 #ifndef CALC_TEXTURE_STORE
 #define CALC_TEXTURE_STORE
 
+#include <vector>
 #include "texture.h"
 
 #define TEXTURESTORE_VIEWPORT_TEXTURE 0x01u
@@ -10,14 +11,12 @@
 class AssetManager
 {
 private:
-    Texture *pViewportTexture;
-    Texture *pNumbersTexture;
-    Texture *pOperatorTexture;
+    std::vector<Texture *> *pTextures;
 
 public:
     AssetManager();
     ~AssetManager();
-    Texture *GetTexture(Uint32 identifier);
+    Texture *GetTexture(std::string identifier);
     bool LoadTextures(SDL_Renderer *renderer);
 };
 
