@@ -1,4 +1,4 @@
-OBJS = Main.cpp
+OBJS = Main.cpp texture.cpp assetmanager.cpp viewport.cpp
 
 CC = g++
 
@@ -6,7 +6,7 @@ MCC = clang++
 
 COMPILER_FLAGS = -w
 
-LINKER_FLAGS = -lSDL2 -lSDL2_image
+LINKER_FLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf
 
 APP_NAME = retro-calculator.app
 

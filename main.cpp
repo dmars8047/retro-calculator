@@ -3,7 +3,8 @@
 #include <SDL_image.h>
 #include <string>
 
-#include "texturestore.h"
+#include "assetmanager.h"
+#include "viewport.h"
 
 const int MAIN_WINDOW_WIDTH = 400;
 const int MAIN_WINDOW_HEIGHT = 600;
@@ -22,7 +23,7 @@ SDL_Window *gMainWindow = NULL;
 SDL_Renderer *gRenderer = NULL;
 
 // A store for textures
-TextureStore *gTextureStore = NULL;
+AssetManager *gAssetManager = NULL;
 
 bool initSDL()
 {
@@ -75,9 +76,9 @@ bool initSDL()
 
 bool loadMedia()
 {
-	gTextureStore = new TextureStore();
+    gAssetManager = new AssetManager();
 
-    return true;
+    return gAssetManager->LoadTextures(gRenderer);
 }
 
 bool close(int returnCode)
@@ -85,13 +86,13 @@ bool close(int returnCode)
     // Destroy window
     SDL_DestroyRenderer(gRenderer);
     SDL_DestroyWindow(gMainWindow);
-    
+
     // Clean up texture store
-    delete gTextureStore;
+    delete gAssetManager;
 
     // Quit SDL subsystems
-	IMG_Quit();
-	SDL_Quit();
+    IMG_Quit();
+    SDL_Quit();
 
     return returnCode;
 }
@@ -116,6 +117,8 @@ int main()
 
     // Event handler
     SDL_Event e;
+
+    ViewPort viewport = ViewPort(gAssetManager->GetTexture(TEXTURESTORE_VIEWPORT_TEXTURE));
 
     while (!quit)
     {
@@ -143,6 +146,8 @@ int main()
         // Clear screen
         SDL_SetRenderDrawColor(gRenderer, BACKGROUND_RED, BACKGROUND_GREEN, BACKGROUND_BLUE, BACKGROUND_ALPHA);
         SDL_RenderClear(gRenderer);
+
+        viewport.Render(gRenderer);
 
         // Update screen
         SDL_RenderPresent(gRenderer);

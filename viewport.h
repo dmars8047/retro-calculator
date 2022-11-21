@@ -2,16 +2,24 @@
 #define CALC_VIEWPORT
 
 #include <string>
+#include <SDL.h>
 
-const int DEFAULT_WIDTH = 392;
-const int DEFAULT_HEIGHT = 40;
+#include "texture.h"
 
 class ViewPort
 {
-    private:
-        int height = DEFAULT_HEIGHT;
-        int width = DEFAULT_WIDTH;
-    public:
+private:
+    int height;
+    int width;
+    int x;
+    int y;
+    Texture *pTexture;
+
+public:
+    ViewPort(Texture *texture);
+    ~ViewPort();
+    void Render(SDL_Renderer *renderer);
+    void Update(float deltaTime);
 };
 
 #endif
